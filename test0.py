@@ -612,65 +612,20 @@ class Game(object):
             actions_= []
             rewards_= []
             padded_num = 16
-            entroy_loss=nn.CrossEntropyLoss()
-            actions_test = []
+            
             
             while not game_end:
                 state,Q_net_outputs,actions,episode_end,game_end,yaobuqi = self.play_step()
-                actions_test.append(actions)
-#                if yaobuqi:
-#                    rewards_.append(0)
-#                    continue
-                state_self = np.sort(np.argwhere(state[:4,:]==1)[:,1])
-                state_opp  = np.sort(np.argwhere(state[4:8,:]==1)[:,1])
-                state_puted_last = np.sort(np.argwhere(state[8:12,:]==1)[:,1])
-                state_self_pad = np.pad(state_self,(0,padded_num-len(state_self)),'constant',constant_values = 14)
-                state_opp_pad  = np.pad(state_opp,(0,padded_num-len(state_opp)),'constant',constant_values = 14)
-                state_puted_last_pad = np.pad(state_puted_last,(0,padded_num-len(state_puted_last)),'constant',constant_values = 14)
-
-                states_.append(np.concatenate([state_self_pad,state_opp_pad ,state_puted_last_pad]))
+                
                 actions_.append(actions)
-                if self.player_current == 1:
-                    rewards_.append(1)
-                else:
-                    rewards_.append(-1)
+                
             data_len = len(states_)
             
             if 1-data_len%2 == test_player:
                 win0sum += 1
-#            if win0sum/(step+0.001) >0.6:
-            print(111111111111,win0sum/(step+1))
-            rewards_ = rewards_[::-1]
-            rewards_ = [x for x in rewards_ if x != 0]
-            if len(rewards_) < 10:
-                print('len < 10:',states_,actions_)
-#            rewards_ =rewards_[::-1]
-            input    =  np.stack(states_)
-            acts     =  np.stack(actions_)
-            target   =  np.stack(rewards_)
-            input    = Variable(torch.LongTensor(input))
-            acts     = torch.LongTensor(acts)
-            target    = Variable(torch.FloatTensor(target))
+            print('Ai win rate:',win0sum/(step+1))
+
             
-            
-#            while True:
-                
-            step+=1
-#                for i in range(data_len):
-            optimizer.zero_grad()
-            output = Q_net(input)
-            Q_value0 = torch.gather(output[0],1, acts[:,0].unsqueeze(1)).view(-1) #(output[0])[np.arange(data_len),acts[:,0]] # torch.gather(output[0],1, acts[:,0].unsqueeze(1)).view(-1)
-            Q_value1 = output[1].gather(1, acts[:,1].unsqueeze(1))
-            Q_value2 = output[2].gather(1, acts[:,2].unsqueeze(1))
-            Qvalue   = (Q_value0.view(-1) + Q_value1.view(-1) + Q_value2.view(-1))/3
-            loss = F.mse_loss(Qvalue,target) #torch.abs(Q_value0-target).mean() #F.mse_loss(Q_value0,target)
-            loss0 += loss.item()
-            if step%5000==0:
-                torch.save(Q_net,f'model/Qnet_model{step}.model')
-            if step%100==0:
-                print('step:' , step,'loss: ',loss.item())
-                print(output[0].gather(1, acts[:,0].unsqueeze(1)).view(-1),target,'loss:',loss0/100)
-                loss0 = 0.
 
                 
 training_pipeline = Trainer()
