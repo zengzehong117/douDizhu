@@ -24,23 +24,42 @@ player Ai:  过.
 player Random put card: J
 
 player Ai  put card: 2
+
 player Random:  过.
+
 player Ai  put card: ('5', '5')
+
 player Random put card: ('2', '2')
+
 player Ai:  过.
+
 player Random put card: J
+
 player Ai  put card: K
+
 player Random:  过.
+
 player Ai  put card: ('6', '6')
+
 player Random put card: ('10', '10')
+
 player Ai  put card: ('A', 'A')
+
 player Random:  过.
+
 player Ai  put card: 3
+
 player Random put card: 5
+
 player Ai  put card: 9
+
 player Random put card: K
+
 player Ai:  过.
+
 player Random put card: 7
+
 player Ai  put card: J
+
 Winer is player Ai.
 
